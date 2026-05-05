@@ -2,22 +2,27 @@ package cattura;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.HeadlessException;
 import javax.swing.JFrame;
 
 /**
- * Classe principale del programma
+ * Classe principale del programma che visualizza il menù
+ * ed esegue il gioco
  */
 public class Cattura extends JFrame {
-
+    public static final int LARGHEZZA = 1900;
+    public static final int LUNGHEZZA = 880;
+    
     private CardLayout cardLayout;
     private java.awt.Container pnlPrincipale;
     private MenuPanel menu;
     private GiocoPanel gioco;
-
-    public Cattura() throws HeadlessException {
+    
+    /**
+     * 
+     */
+    public Cattura() {
         super("Cattura");
-        setSize(1900, 880);
+        setSize(LARGHEZZA, LUNGHEZZA);
         setLocationRelativeTo(null);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

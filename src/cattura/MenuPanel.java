@@ -11,18 +11,17 @@ import javax.swing.JPanel;
  * Pannello che gestisce il menù principale dell'applicazione
  */
 public class MenuPanel extends BasePanel implements ActionListener {
-
     private CardLayout cardLayout;
     private JPanel pnlCentro;
-
+    
     private JButton btnGioca;
     private JButton btnOpzioni;
     private JButton btnStatistiche;
-
+    
     private BasePanel actualPanel;
     private OpzioniPanel opzioni;
     private StatistichePanel statistiche;
-
+    
     public MenuPanel(Cattura parent) {
         super(parent);
         cardLayout = new CardLayout(10, 10);
@@ -30,7 +29,7 @@ public class MenuPanel extends BasePanel implements ActionListener {
         creaGUI();
         aggiungiListener();
     }
-
+    
     private void creaGUI() {
         pnlCentro = new JPanel(cardLayout);
 

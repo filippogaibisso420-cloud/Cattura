@@ -10,12 +10,15 @@ import javax.swing.JButton;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /**
  * Pannello all'interno del quale si svolge il gioco
  */
 public class GiocoPanel extends BasePanel implements Runnable, MouseMotionListener, ActionListener {
-
     private static final int FPS = 60;
     private static final int MS_PER_FRAME = 1000 / FPS;
 
@@ -107,7 +110,6 @@ public class GiocoPanel extends BasePanel implements Runnable, MouseMotionListen
         }
     }
 
-    // --------------------------------------------------------------- disegno
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -126,7 +128,9 @@ public class GiocoPanel extends BasePanel implements Runnable, MouseMotionListen
         }
     }
 
-    // ------------------------------------------------------- gestione hover
+    /**
+     * 
+     */
     @Override
     public void mouseMoved(MouseEvent e) {
         if (!inCorso) return;
@@ -142,7 +146,11 @@ public class GiocoPanel extends BasePanel implements Runnable, MouseMotionListen
             cattura(s);
         }
     }
-
+    
+    /**
+     * 
+     * @param e 
+     */
     @Override
     public void mouseDragged(MouseEvent e) {
         mouseMoved(e);
@@ -157,25 +165,87 @@ public class GiocoPanel extends BasePanel implements Runnable, MouseMotionListen
         figureCatturate++;
 
         long tempoTrascorso = (System.currentTimeMillis() - tempoInizio) / 1000 + 1;
-        // più è grande la figura e meno tempo ci hai messo, più punti ottieni
-        int puntiGuadagnati = (int)(s.getDimensione() * 100 / tempoTrascorso);
+        int puntiBase = (int)(s.getDimensione() * 10 / tempoTrascorso);
+        int puntiGuadagnati = (int)Math.round(puntiBase * opzioni.getMoltiplicatore());
         punteggio += puntiGuadagnati;
 
-        // fine in modalità figure
-        if (opzioni.getModalita() == Opzioni.MODALITA_CASUAL && figure.isEmpty()) {
+        if (figure.isEmpty()) {
             finePartita();
         }
     }
 
-    /** Chiamato quando la partita termina */
+    /**
+     * Chiamato quando la partita termina 
+     */
     private void finePartita() {
+        repaint();
         inCorso = false;
         long tempoTotaleMs = System.currentTimeMillis() - tempoInizio;
 
-        Statistiche.salvaRecord(opzioni.getModalita(), punteggio, tempoTotaleMs);
-        repaint();
+        String titolo, messaggio;
+        if (opzioni.getModalita() == Opzioni.MODALITA_CASUAL) {
+            titolo = "Hai vinto!";
+            messaggio = String.format(
+                "<html><center>Hai catturato tutte le figure!<br>" +
+                "Punteggio: %d<br>" +
+                "Tempo impiegato: %d:%02d.%03d</center></html>",
+                punteggio,
+                tempoTotaleMs / 60000,
+                (tempoTotaleMs % 60000) / 1000,
+                tempoTotaleMs % 1000
+            );
+        } else {
+            if (figure.isEmpty()) {
+                punteggio += opzioni.getMoltiplicatore() * 100 * opzioni.getTempoSecondi();
+                titolo = "Hai vinto!";
+                messaggio = String.format(
+                    "<html><center>Hai catturato tutte le figure in tempo!<br>" +
+                    "Punteggio: %d</center></html>",
+                    punteggio
+                );
+            } else {
+                titolo = "Tempo scaduto!";
+                messaggio = String.format(
+                    "<html><center>Figure catturate: %d/%d<br>" +
+                    "Punteggio: %d</center></html>",
+                    figureCatturate, opzioni.getNFigure(), punteggio
+                );
+            }
+            Statistiche.salvaRecord(opzioni.getModalita(), punteggio, tempoTotaleMs);
+        }
+
+        JDialog dialog = new JDialog(parent, titolo, true);
+        dialog.setLayout(new BorderLayout(10, 10));
+        dialog.setResizable(false);
+
+        JLabel lblMessaggio = new JLabel(messaggio, JLabel.CENTER);
+        lblMessaggio.setFont(new Font("Arial", Font.PLAIN, 16));
+        lblMessaggio.setBorder(BorderFactory.createEmptyBorder(20, 30, 10, 30));
+
+        JButton btnTornaMenu = new JButton("Torna al menu");
+        btnTornaMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dialog.dispose();
+                parent.tornaAlMenu();
+            }
+        });
+
+        JPanel pnlBtn = new JPanel();
+        pnlBtn.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+        pnlBtn.add(btnTornaMenu);
+
+        dialog.add(lblMessaggio, BorderLayout.CENTER);
+        dialog.add(pnlBtn, BorderLayout.SOUTH);
+        dialog.pack();
+        dialog.setLocationRelativeTo(parent);
+        dialog.setVisible(true);
     }
 
+    /**
+     * 
+     * @param e 
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnMenu) {

@@ -2,7 +2,6 @@ package cattura;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ButtonGroup;
@@ -33,35 +32,50 @@ public class OpzioniPanel extends BasePanel implements ActionListener {
     }
 
     private void creaGUI() {
-        JPanel pnlCampi = new JPanel(/*new GridLayout(5, 2, 5, 5)*/);
+        JPanel pnlCampi = new JPanel();
 
-        spnVelocita = new JSpinner(new SpinnerNumberModel(5, 1, 15, 1));
+        spnVelocita = new JSpinner(new SpinnerNumberModel(Opzioni.DEFAULT_VELOCITA, 1, 10, 1));
         spnNFigure  = new JSpinner(new SpinnerNumberModel(10, 1, 30,  1));
-        spnTempo    = new JSpinner(new SpinnerNumberModel(30, 10, 120, 5));
-
+        spnTempo    = new JSpinner(new SpinnerNumberModel(Opzioni.DEFAULT_TEMPO, 10, 60, 5));
+        
+        ((JSpinner.DefaultEditor) spnVelocita.getEditor()).getTextField().setEditable(false);
+        ((JSpinner.DefaultEditor) spnNFigure.getEditor()).getTextField().setEditable(false);
+        ((JSpinner.DefaultEditor) spnTempo.getEditor()).getTextField().setEditable(false);
+        
         rbtnCompetitivo   = new JRadioButton("Competitiva (a tempo)");
         rbtnCasual  = new JRadioButton("Casual", true);
         ButtonGroup gruppo = new ButtonGroup();
         gruppo.add(rbtnCompetitivo);
         gruppo.add(rbtnCasual);
 
-        pnlCampi.add(new JLabel("Velocità:"));
+        JLabel lblVelocita = new JLabel("Velocità:");
+        lblVelocita.setFont(new Font("Verdana", Font.PLAIN, 14));
+        pnlCampi.add(lblVelocita);
         pnlCampi.add(spnVelocita);
-        pnlCampi.add(new JLabel("Numero figure:"));
+        
+        JLabel lblFigure = new JLabel("Numero figure:");
+        lblFigure.setFont(new Font("Verdana", Font.PLAIN, 14));
+        pnlCampi.add(lblFigure);
         pnlCampi.add(spnNFigure);
-        pnlCampi.add(new JLabel("Tempo (secondi):"));
+        
+        JLabel lblTempo = new JLabel("Tempo (secondi):");
+        lblTempo.setFont(new Font("Verdana", Font.PLAIN, 14));
+        pnlCampi.add(lblTempo);
         pnlCampi.add(spnTempo);
-        pnlCampi.add(new JLabel("Modalità:"));
+        
+        JLabel lblModalita = new JLabel("Modalità:");
+        lblModalita.setFont(new Font("Verdana", Font.PLAIN, 14));
+        pnlCampi.add(lblModalita);
         JPanel pnlRadio = new JPanel();
         pnlRadio.add(rbtnCompetitivo);
         pnlRadio.add(rbtnCasual);
         pnlCampi.add(pnlRadio);
 
         btnIndietro = new JButton("← Indietro");
-        JLabel opzioni = new JLabel("Opzioni di gioco", JLabel.CENTER);
-        opzioni.setFont(new Font("Geneva", Font.ROMAN_BASELINE, 18));
+        JLabel lblOpzioni = new JLabel("Opzioni di gioco", JLabel.CENTER);
+        lblOpzioni.setFont(new Font("Verdana", Font.BOLD, 22));
         
-        add(opzioni, BorderLayout.NORTH);
+        add(lblOpzioni, BorderLayout.NORTH);
         add(pnlCampi,    BorderLayout.CENTER);
         add(btnIndietro, BorderLayout.SOUTH);
     }
@@ -79,8 +93,8 @@ public class OpzioniPanel extends BasePanel implements ActionListener {
         int nFigure  = (int) spnNFigure.getValue();
         int tempo    = (int) spnTempo.getValue();
         int modalita = rbtnCompetitivo.isSelected()
-                        ? Opzioni.MODALITA_COMPETITIVA
-                        : Opzioni.MODALITA_CASUAL;
+                ? Opzioni.MODALITA_COMPETITIVA
+                : Opzioni.MODALITA_CASUAL;
         return new Opzioni(vel, nFigure, tempo, modalita);
     }
 

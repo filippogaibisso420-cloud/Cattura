@@ -58,8 +58,8 @@ public class StatistichePanel extends BasePanel implements ActionListener {
                     tempoMs % 1000));
         }
 
-        int fig = Statistiche.getRecordPunteggio();
-        lblRecordPunteggio.setText(fig == 0 ? "Nessun record" : String.valueOf(fig));
+        int recordPunteggio = Statistiche.getRecordPunteggio();
+        lblRecordPunteggio.setText(recordPunteggio == 0 ? "Nessun record" : String.valueOf(recordPunteggio));
     }
 
     @Override

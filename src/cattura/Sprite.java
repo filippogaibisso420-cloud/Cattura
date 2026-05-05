@@ -43,8 +43,8 @@ public class Sprite {
             this.imgAttuale = immaginiSalvate[indiceCasuale];
         }
         
-        int larghezzaPannello = parent.getWidth() > 0 ? parent.getWidth() : 1900;
-        int altezzaPannello = parent.getHeight() > 0 ? parent.getHeight() : 880;
+        int larghezzaPannello = parent.getWidth() > 0 ? parent.getWidth() : Cattura.LARGHEZZA;
+        int altezzaPannello = parent.getHeight() > 0 ? parent.getHeight() : Cattura.LUNGHEZZA;
 
         this.x = rand.nextInt(larghezzaPannello - dimensione);
         this.y = rand.nextInt(altezzaPannello - dimensione);
@@ -76,13 +76,6 @@ public class Sprite {
     // Metodo per disegnare
     public void disegna(Graphics g) {
         if (imgAttuale != null) {
-//            Graphics2D g2d = (Graphics2D) g;
-//            Composite compositeOriginale = g2d.getComposite();
-//
-//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
-//            g2d.drawImage(imgAttuale, x, y, dimensione, dimensione, null);
-//
-//            g2d.setComposite(compositeOriginale);
             g.drawImage(imgAttuale, x, y, dimensione, dimensione, parent);
         } else {
             g.setColor(java.awt.Color.GRAY);
