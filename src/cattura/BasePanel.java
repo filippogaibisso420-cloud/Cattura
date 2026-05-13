@@ -3,13 +3,13 @@ package cattura;
 import javax.swing.JPanel;
 
 /**
- * classe base per l'implementazione delle varie schermate dell'applicazione
+ * classe base per l'implementazione delle varie schermate dell'applicazione.
  */
 abstract public class BasePanel extends JPanel {
     protected Cattura parent;
     
     /**
-     * crea il collegamento tra il pannello e il padre
+     * crea il collegamento tra il pannello e il padre.
      * @param parent il padre del pannello
      */
     public BasePanel(Cattura parent) {
@@ -17,7 +17,7 @@ abstract public class BasePanel extends JPanel {
     }
     
     /**
-     * metodo che ripristina il panel allo stato originale
+     * metodo che ripristina il panel allo stato originale.
      */
     abstract void reset();
 }
